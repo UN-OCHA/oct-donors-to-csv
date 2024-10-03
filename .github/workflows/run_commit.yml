@@ -1,0 +1,36 @@
+name: Run
+
+on:
+  schedule:
+    - cron: '* * */14 * *'
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup
+      uses: actions/setup-node@v2
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Install Node.js dependencies
+      run: npm ci
+
+    - name: Start
+      run: npm start
+
+    - name: Commit
+      run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add data.csv
+          git commit -m "chore: Data generated"
+          git push

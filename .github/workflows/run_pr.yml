@@ -1,0 +1,30 @@
+name: Run
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup
+      uses: actions/setup-node@v2
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Install Node.js dependencies
+      run: npm ci
+
+    - name: Start
+      run: npm start
+
+    - name: Commit
+      run: |
+          head -n50 data.csv
