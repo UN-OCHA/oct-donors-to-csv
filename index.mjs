@@ -6,19 +6,8 @@ import * as iso3_2 from "country-iso-3-to-2";
 const startYear = 2008;
 const endYear = new Date().getFullYear() + 1;
 
-// Filters.
-let filters = [
-    {
-        field: 'date.created',
-        value: {
-            from: '2024-01-01T00:00:00+00:00',
-            to: '2024-12-31T23:59:59+00:00'
-        }
-    }
-];
-
 /**
- * Get data from RW API.
+ * Get data from OCT.
  *
  * @param {int} offset
  * @param {int} limit
