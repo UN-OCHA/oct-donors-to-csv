@@ -101,7 +101,7 @@ async function writeCsv(results, year, needsHeader) {
 }
 
 (async function () {
-    let writeStream = fs.createWriteStream('./data.csv');    
+    let combinedStream = fs.createWriteStream('./data.csv');    
     let needsHeader = true;
 
     const years = Array.from({length: (endYear - startYear)}, (v, k) => k + startYear);
@@ -112,17 +112,23 @@ async function writeCsv(results, year, needsHeader) {
 
     for (const year of years) {
         console.info('Processing ' + year);
+        let yearStream = fs.createWriteStream('./data_' + year + '.csv');    
         let XMLdata = await getData(year);
         
         let jObj = parser.parse(XMLdata);
         let data = jObj['soap:Envelope']['soap:Body'].GetDonorRankingForOCHAOnlineV2Response.GetDonorRankingForOCHAOnlineV2Result.Donors.DonorRankV2 || [];
     
         let csv = await writeCsv(data, year, needsHeader);
-        writeStream.write(csv);
-        writeStream.write("\n");
+        combinedStream.write(csv);
+        combinedStream.write("\n");
+
+        csv = await writeCsv(data, year, true);
+        yearStream.write(csv);
+        yearStream.write("\n");
+        yearStream.close();
 
         needsHeader = false;
     }
 
-    writeStream.close();
+    combinedStream.close();
 })();

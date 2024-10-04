@@ -32,5 +32,6 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add data.csv
+          git add data_*.csv
           git commit -m "chore: Data generated" --allow-empty
           git push
