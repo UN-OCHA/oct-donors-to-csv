@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@json2csv/plainjs": "^7.0.6",
+    "country-iso-3-to-2": "^1.1.1",
     "fast-xml-parser": "^4.5.0"
   }
 }
