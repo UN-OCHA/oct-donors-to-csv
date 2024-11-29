@@ -5,6 +5,11 @@ import * as iso3_2 from "country-iso-3-to-2";
 
 const startYear = 2008;
 const endYear = new Date().getFullYear() + 1;
+const countryCodesToIgnore = [
+    'un',
+    'a',
+    'pri_con',
+];
 
 /**
  * Get data from OCT.
@@ -45,6 +50,21 @@ async function getData(year) {
 }
 
 /**
+ * Get flag code, support eu
+ */
+function getFlagCode(row) {
+    if (!row.CountryCode) {
+        return '';
+    }
+
+    if (row.CountryCode.toLowerCase() == 'eu') {
+        return ':eu: ';
+    }
+
+    return (iso3_2.default(row.CountryCode) ? ':' + iso3_2.default(row.CountryCode).toLowerCase() + ': ' : '');
+}
+
+/**
  * Build and write csv data.
  */
 async function writeCsv(results, year, needsHeader) {
@@ -65,7 +85,7 @@ async function writeCsv(results, year, needsHeader) {
             },
             {
                 label: 'DonorNameWithFlag',
-                value: (row) => (iso3_2.default(row.CountryCode) ? ':' + iso3_2.default(row.CountryCode).toLowerCase() + ': ' : '') + row.DonorName
+                value: (row) => getFlagCode(row) + row.DonorName
             },
             {
                 label: 'Iso3',
@@ -115,7 +135,21 @@ async function writeCsv(results, year, needsHeader) {
         let XMLdata = await getData(year);
         
         let jObj = parser.parse(XMLdata);
-        let data = jObj['soap:Envelope']['soap:Body'].GetDonorRankingForOCHAOnlineV2Response.GetDonorRankingForOCHAOnlineV2Result.Donors.DonorRankV2 || [];
+        let input = jObj['soap:Envelope']['soap:Body'].GetDonorRankingForOCHAOnlineV2Response.GetDonorRankingForOCHAOnlineV2Result.Donors.DonorRankV2 || [];
+        let data = [];
+        for (const row of input) {
+            // Skip entries without country code.
+            if (!row.CountryCode) {
+                continue;
+            }
+
+            // Skip UN, NGO, ...
+            if (countryCodesToIgnore.includes(row.CountryCode.toLowerCase())) {
+                continue;
+            }
+
+            data.push(row);
+        }
 
         let csv = await writeCsv(data, year, needsHeader);
         combinedStream.write(csv);
