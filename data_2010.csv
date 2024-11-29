@@ -1,7 +1,7 @@
 "Year","Rank","DonorName","DonorNameWithFlag","Iso3","Iso2","Earmarked","UnEarmarked","Total"
 2010,"1","Sweden",":se: Sweden","swe","se","10841596","16859907","27701503"
 2010,"2","United States",":us: United States","usa","us","17630000","4050000","21680000"
-2010,"3","European Commission",":eu: European Commission","eu","","19865508","0","19865508"
+2010,"3","European Commission",":eu: European Commission","eu","eu","19865508","0","19865508"
 2010,"4","Norway",":no: Norway","nor","no","7096900","12657794","19754694"
 2010,"5","United Kingdom",":gb: United Kingdom","gbr","gb","3135024","11146496","14281520"
 2010,"6","Australia",":au: Australia","aus","au","4196445","6235401","10431846"
