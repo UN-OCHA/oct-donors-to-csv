@@ -50,18 +50,30 @@ async function getData(year) {
 }
 
 /**
- * Get flag code, support eu
+ * Get iso2 code, support eu
  */
-function getFlagCode(row) {
-    if (!row.CountryCode) {
+function getIso2(iso3) {
+    if (!iso3) {
         return '';
     }
 
-    if (row.CountryCode.toLowerCase() == 'eu') {
-        return ':eu: ';
+    if (iso3.toLowerCase() == 'eu') {
+        return 'eu';
     }
 
-    return (iso3_2.default(row.CountryCode) ? ':' + iso3_2.default(row.CountryCode).toLowerCase() + ': ' : '');
+    return iso3_2.default(iso3) ? iso3_2.default(iso3).toLowerCase() : '';
+}
+
+/**
+ * Get flag code, support eu
+ */
+function getFlagCode(row) {
+    let iso2 = getIso2(row.CountryCode);
+    if (iso2 == '') {
+        return '';
+    }
+
+    return ':' + iso2 + ': ';
 }
 
 /**
@@ -93,7 +105,7 @@ async function writeCsv(results, year, needsHeader) {
             },
             {
                 label: 'Iso2',
-                value: (row) => (iso3_2.default(row.CountryCode) ? iso3_2.default(row.CountryCode).toLowerCase() : '')
+                value: (row) => getIso2(row.CountryCode)
             },
             {
                 label: 'Earmarked',
